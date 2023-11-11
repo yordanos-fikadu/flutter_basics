@@ -1,13 +1,11 @@
-import 'package:demo/http/http_home.dart';
+import 'package:demo/http/home.dart';
 import 'package:demo/provider/catalog.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(
-    const MaterialApp(
-      home: HttpHome(),
-    )
-  );
+  runApp(const MaterialApp(
+    home: Home(),
+  ));
 }
 // void main() {
 //   runApp(

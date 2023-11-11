@@ -1,6 +1,7 @@
 import 'package:demo/http/create_response.dart';
 import 'package:demo/http/get_response.dart';
 import 'package:demo/http/navigator.dart';
+import 'package:demo/http/update_response.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -20,10 +21,13 @@ class _HomeState extends State<Home> {
         actions: [
           IconButton(
               onPressed: () => toPage(context, CreateResponse()),
-              icon: Icon(Icons.edit))
+              icon: Icon(Icons.edit)),
+          IconButton(
+              onPressed: () => toPage(context, UpdateResponse()),
+              icon: Icon(Icons.update))
         ],
       ),
-      body: CreateResponse(),
+      body: UpdateResponse(),
     );
   }
 }

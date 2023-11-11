@@ -1,6 +1,6 @@
-import 'package:demo/Item.dart';
-import 'package:demo/cart.dart';
-import 'package:demo/provider.dart';
+import 'package:demo/provider/cart.dart';
+import 'package:demo/provider/item.dart';
+import 'package:demo/provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

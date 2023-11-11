@@ -1,18 +1,24 @@
-import 'package:demo/provider.dart';
+import 'package:demo/http/http_home.dart';
+import 'package:demo/provider/catalog.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'catalog.dart';
 
 void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => CartModel()),
-      ],
-      child: MyApp(),
-    ),
+    const MaterialApp(
+      home: HttpHome(),
+    )
   );
 }
+// void main() {
+//   runApp(
+//     MultiProvider(
+//       providers: [
+//         ChangeNotifierProvider(create: (context) => CartModel()),
+//       ],
+//       child: MyApp(),
+//     ),
+//   );
+// }
 
 class MyApp extends StatelessWidget {
   @override

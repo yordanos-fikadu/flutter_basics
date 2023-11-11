@@ -20,9 +20,9 @@ class Users {
 
   factory Users.fromjson(Map<String, dynamic> json) {
     return Users(
-        id: json['id'],
-        name: json['name'],
-        username: json['username'],
-        email: json['email']);
+        id: json['id'] ?? 0,
+        name: json['name'] ?? '',
+        username: json['username'] ?? '',
+        email: json['email'] ?? '');
   }
 }

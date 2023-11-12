@@ -1,10 +1,14 @@
 import 'package:demo/http/home.dart';
 import 'package:demo/provider/catalog.dart';
+import 'package:demo/sqlflite/sqlFlite.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: Home(),
+  // Initialize the sqflite database factory
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(MaterialApp(
+    home: SqlFlite(),
   ));
 }
 // void main() {

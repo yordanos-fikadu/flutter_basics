@@ -1,7 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:demo/http/home.dart';
-import 'package:demo/http/navigator.dart';
 import 'package:demo/http/users.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';

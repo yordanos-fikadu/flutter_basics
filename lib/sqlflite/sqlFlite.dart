@@ -101,31 +101,28 @@ class _SqlFliteState extends State<SqlFlite> {
                         itemBuilder: (context, index) {
                           final value = snapshot.data![index];
                           Users user = Users.fromMap(value);
-                          return Container(
-                            width: 300,
-                            child: Card(
-                              elevation: 10,
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text('${user.id}'),
-                                ),
-                                title: Text(user.name),
-                                subtitle: Text(user.email),
-                                trailing: IconButton(
-                                  onPressed: () async {
-                                    showAlertDialog('Update',
-                                        layout(false, user.id), context);
-                                  },
-                                  icon: const Icon(Icons.update),
-                                ),
-                                onTap: () async {
-                                  await delete(user.id);
-                                  showAlertDialog(
-                                      'Delete',
-                                      Text('User deleted successfully!'),
-                                      context);
-                                },
+                          return Card(
+                            elevation: 10,
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: Text('${user.id}'),
                               ),
+                              title: Text(user.name),
+                              subtitle: Text(user.email),
+                              trailing: IconButton(
+                                onPressed: () async {
+                                  showAlertDialog('Update',
+                                      layout(false, user.id), context);
+                                },
+                                icon: const Icon(Icons.update),
+                              ),
+                              onTap: () async {
+                                await delete(user.id);
+                                showAlertDialog(
+                                    'Delete',
+                                    Text('User deleted successfully!'),
+                                    context);
+                              },
                             ),
                           );
                         },

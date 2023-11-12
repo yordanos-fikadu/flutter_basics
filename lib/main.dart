@@ -1,14 +1,15 @@
 import 'package:demo/http/home.dart';
 import 'package:demo/provider/catalog.dart';
 import 'package:demo/sqlflite/sqlFlite.dart';
+import 'package:demo/testing/widget_testing.dart';
 import 'package:flutter/material.dart';
 
 void main() {
   // Initialize the sqflite database factory
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
 
   runApp(MaterialApp(
-    home: SqlFlite(),
+    home: MyWidget(name: 'me',),
   ));
 }
 // void main() {

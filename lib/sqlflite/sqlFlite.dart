@@ -1,3 +1,4 @@
+import 'package:demo/sqlflite/sql_methods.dart';
 import 'package:demo/sqlflite/users.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -12,78 +13,65 @@ class SqlFlite extends StatefulWidget {
 
 class _SqlFliteState extends State<SqlFlite> {
   late Future<Database?> initializeDatabase;
-
+  // bool _isInserted = false;
+  final idController = TextEditingController();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
   @override
   void initState() {
     super.initState();
     initializeDatabase = createDatabase();
-    // initializeDatabase.then((_) {
-    //   // Insert a user when the database is initialized
-    //   insertUser();
-    // });
   }
 
-  Database? database;
+  Widget layout(bool isInsert, int? updatedId) {
+    return Column(
+      children: [
+        TextFormField(
+          decoration: const InputDecoration(hintText: 'id'),
+          controller: idController,
+        ),
+        TextFormField(
+          decoration: const InputDecoration(hintText: 'name'),
+          controller: nameController,
+        ),
+        TextFormField(
+          decoration: const InputDecoration(hintText: 'email'),
+          controller: emailController,
+        ),
+        OutlinedButton(
+            onPressed: () async {
+              isInsert
+                  ? await insertUser(int.parse(idController.text),
+                      nameController.text, emailController.text)
+                  : update(updatedId!, int.parse(idController.text),
+                      nameController.text, emailController.text);
+              idController.clear();
+              nameController.clear();
+              emailController.clear();
+            },
+            child: const Text('Create')),
+      ],
+    );
+  }
 
-  Future<Database?> createDatabase() async {
-    if (database != null) return database;
-    var databasesPath = await getDatabasesPath();
-    String path = join(databasesPath, 'demo.db');
-    database = await openDatabase(
-      path,
-      version: 1,
-      onCreate: (db, version) async {
-        await db.execute(
-            'CREATE TABLE Information (id INTEGER PRIMARY KEY, name TEXT, email TEXT)');
+  Future<void> showAlertDialog(
+      String title, Widget content, BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: content,
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('clear'),
+            ),
+          ],
+        );
       },
-    );
-    return database;
-  }
-
-  Future<int?> insertUser() async {
-    if (database == null) {
-      throw Exception('Database not initialized.');
-    }
-
-    Users users = const Users(id: 1, name: 'yordi', email: 'yordi@gmail.com');
-    // Users users = const Users(id: 2, name: 'nadom', email: 'nadom@gmail.com');
-    print(await database!.insert(
-      'Information',
-      users.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    ));
-    return await database!.insert(
-      'Information',
-      users.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<List<Map<String, dynamic>>> query() async {
-    if (database == null) {
-      throw Exception('Database not initialized.');
-    }
-
-    return await database!.query('Information');
-  }
-
-  Future<int> update(int id) async {
-    Users users = const Users(id: 2, name: 'yordi', email: 'yordi@gmail.com');
-    return await database!.update(
-      'Information',
-      users.toMap(),
-      where: 'id=$id',
-    );
-  }
-
-  Future<void> delete(int id) async {
-    if (database == null) {
-      throw Exception('Database not initialized.');
-    }
-
-    await database!.delete(
-      'Information',
-      where: 'id=$id',
     );
   }
 
@@ -111,22 +99,33 @@ class _SqlFliteState extends State<SqlFlite> {
                       return ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
-                          return Card(
-                            elevation: 10,
-                            child: ListTile(
-                              leading: CircleAvatar(
-                                child: Text('${snapshot.data![index]['id']}'),
+                          final value = snapshot.data![index];
+                          Users user = Users.fromMap(value);
+                          return Container(
+                            width: 300,
+                            child: Card(
+                              elevation: 10,
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  child: Text('${user.id}'),
+                                ),
+                                title: Text(user.name),
+                                subtitle: Text(user.email),
+                                trailing: IconButton(
+                                  onPressed: () async {
+                                    showAlertDialog('Update',
+                                        layout(false, user.id), context);
+                                  },
+                                  icon: const Icon(Icons.update),
+                                ),
+                                onTap: () async {
+                                  await delete(user.id);
+                                  showAlertDialog(
+                                      'Delete',
+                                      Text('User deleted successfully!'),
+                                      context);
+                                },
                               ),
-                              title: Text('${snapshot.data![index]['name']}'),
-                              subtitle:
-                                  Text('${snapshot.data![index]['email']}'),
-                              trailing: IconButton(
-                                onPressed: () async =>
-                                    await delete(snapshot.data![index]['id']),
-                                icon: const Icon(Icons.delete),
-                              ),
-                              onTap: () async =>
-                                  await update(snapshot.data![index]['id']),
                             ),
                           );
                         },
@@ -149,6 +148,12 @@ class _SqlFliteState extends State<SqlFlite> {
               child: CircularProgressIndicator(),
             );
           }
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        onPressed: () {
+          showAlertDialog('Insert', layout(true, null), context);
         },
       ),
     );

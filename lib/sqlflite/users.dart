@@ -15,7 +15,7 @@ class Users {
     };
   }
 
-  Users fromMap(Map<String, dynamic> map) {
+ static Users fromMap(Map<String, dynamic> map) {
     return Users(id: map['id'], name: map['name'], email: map['email']);
   }
 }

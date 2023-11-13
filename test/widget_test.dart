@@ -3,43 +3,55 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  // Define a test. The TestWidgets function also provides a WidgetTester
-  // to work with. The WidgetTester allows building and interacting
-  // with widgets in the test environment.
-  // testWidgets('MyWidget has a title and message', (tester) async {
-  //   // Create the widget by telling the tester to build it.
-  //   await tester.pumpWidget(const MyWidget(
-  //     title: 'widget test',
-  //     message: 'message',
-  //     textKey: Key('textKey'),
-  //   ));
-  //   // Create the Finders.
-  //   final titleFinder = find.text('widget test');
-  //   final messageFinder = find.text('message');
-  //   final textKey = find.byKey(const Key('textKey'));
-  //   // Use the `findsOneWidget` matcher provided by flutter_test to
-  //   // verify that the Text widgets appear exactly once in the widget tree.
-  //   expect(titleFinder, findsOneWidget);
-  //   expect(messageFinder, findsWidgets);
-  //   expect(textKey, findsOneWidget);
-  // });
-  // testWidgets('find a specific instance', (widgetTester) async {
-  //   const padding = Padding(padding: const EdgeInsets.all(9));
-  //   await widgetTester.pumpWidget(Container(
-  //     child: padding,
-  //   ));
-  //   expect(find.byWidget(padding), findsOneWidget);
-  // });
-  testWidgets('Add a name', (tester) async {
-    // Enter text code...
-    await tester.pumpWidget(MyWidget(name: 'me',));
-    // Enter 'yordi' into a textField
-    await tester.enterText(find.byType(TextField), 'yordi');
-    // Tap the save button.
-    await tester.tap(find.byType(OutlinedButton));
-    // Rebuild the widget after the state has changed.
+  testWidgets('find a specific instance', (widgetTester) async {
+    const padding = Padding(padding: const EdgeInsets.all(9));
+    await widgetTester.pumpWidget(Container(
+      child: padding,
+    ));
+    expect(find.byWidget(padding), findsOneWidget);
+  });
+
+  testWidgets('Add and remove a todo', (tester) async {
+    // Build the widget.
+    await tester.pumpWidget(const TodoList());
+
+    // Enter 'hi' into the TextField.
+    await tester.enterText(find.byType(TextField), 'hi');
+
+    // Tap the add button.
+    await tester.tap(find.byType(FloatingActionButton));
+
+    // Rebuild the widget with the new item.
     await tester.pump();
+
     // Expect to find the item on screen.
-    expect(find.text('yordi'), findsOneWidget);
+    expect(find.text('hi'), findsOneWidget);
+    // Swipe the item to dismiss it.
+    await tester.drag(find.byType(Dismissible), const Offset(500, 0));
+
+    // Build the widget until the dismiss animation ends.
+    await tester.pumpAndSettle();
+
+    // Ensure that the item is no longer on screen.
+    expect(find.text('hi'), findsNothing);
+  });
+  testWidgets('finds a deep item in a long list', (tester) async {
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(Lists(
+      items: List<String>.generate(10000, (i) => 'Item $i'),
+    ));
+
+    final listFinder = find.byType(Scrollable);
+    final itemFinder = find.byKey(const ValueKey('item_50_text'));
+
+    // Scroll until the item to be found appears.
+    await tester.scrollUntilVisible(
+      itemFinder,
+      500.0,
+      scrollable: listFinder,
+    );
+
+    // Verify that the item contains the correct text.
+    expect(itemFinder, findsOneWidget);
   });
 }

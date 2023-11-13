@@ -4,12 +4,13 @@ import 'package:demo/sqlflite/sqlFlite.dart';
 import 'package:demo/testing/widget_testing.dart';
 import 'package:flutter/material.dart';
 
+import 'testing/integrity_testing.dart';
+
 void main() {
   // Initialize the sqflite database factory
   // WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(MaterialApp(
-    home: MyWidget(name: 'me',),
+  runApp(const MaterialApp(
+    home: MyApp(),
   ));
 }
 // void main() {
@@ -23,11 +24,11 @@ void main() {
 //   );
 // }
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Catalog(),
-    );
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       home: Catalog(),
+//     );
+//   }
+// }
